@@ -1,0 +1,14 @@
+# Frontend App (backend ayrı bir App olarak yayınlanır; bkz. backend docs bölüm 16, karar 6).
+# <kullanici> ve alan adlarını kendi değerlerinizle değiştirin.
+# Oluşturma: doctl apps create --spec .do/app.yaml
+name: rapit-quiz-web
+region: fra
+static_sites:
+  - name: web
+    github: { repo: <kullanici>/rapit-quiz-frontend, branch: main, deploy_on_push: true }
+    build_command: npm ci && npm run build-only
+    output_dir: dist
+    # Vue Router history modu: bilinmeyen yollar index.html'e düşer.
+    catchall_document: index.html
+    envs:
+      - { key: VITE_API_BASE_URL, scope: BUILD_TIME, value: "https://api.rapitquiz.example" }
